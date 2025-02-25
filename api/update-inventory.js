@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // ✅ Mettre à jour le prix de la variante
+        // ✅ Mettre à jour le prix de la variante re
         const priceResponse = await fetch(`https://${SHOPIFY_STORE}/admin/api/${SHOPIFY_API_VERSION}/variants/${variantId}.json`, {
             method: 'PUT',
             headers: {
