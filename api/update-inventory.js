@@ -4,16 +4,26 @@ export default async function handler(req, res) {
     }
 
     const { productId, variantId, newPrice, inventoryItemId, locationId, stockReplenishment } = req.body;
+
+    // Log des variables d'environnement
+    console.log('SHOPIFY_ACCESS_TOKEN:', process.env.SHOPIFY_ACCESS_TOKEN);
+    console.log('SHOPIFY_STORE:', process.env.SHOPIFY_STORE);
+    console.log('SHOPIFY_API_VERSION:', process.env.SHOPIFY_API_VERSION);
+    console.log('SHOPIFY_LOCATION_ID:', process.env.SHOPIFY_LOCATION_ID);
+
     const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
     const SHOPIFY_STORE = process.env.SHOPIFY_STORE;
     const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2024-01';
 
     if (!SHOPIFY_ACCESS_TOKEN || !SHOPIFY_STORE) {
+        console.error('Variables d’environnement Shopify manquantes.');
         return res.status(500).json({ error: 'Variables d’environnement Shopify manquantes.' });
     }
 
     try {
-        // ✅ Mettre à jour le prix de la variante re
+        console.log('Mise à jour du prix pour la variante:', variantId);
+
+        // ✅ Mettre à jour le prix de la variante
         const priceResponse = await fetch(`https://${SHOPIFY_STORE}/admin/api/${SHOPIFY_API_VERSION}/variants/${variantId}.json`, {
             method: 'PUT',
             headers: {
@@ -28,8 +38,11 @@ export default async function handler(req, res) {
         }
 
         const priceData = await priceResponse.json();
+        console.log('Prix mis à jour:', priceData);
 
         // ✅ Réapprovisionner le stock
+        console.log('Réapprovisionnement du stock pour l\'article:', inventoryItemId);
+        
         const stockResponse = await fetch(`https://${SHOPIFY_STORE}/admin/api/${SHOPIFY_API_VERSION}/inventory_levels/adjust.json`, {
             method: 'POST',
             headers: {
@@ -48,6 +61,7 @@ export default async function handler(req, res) {
         }
 
         const stockData = await stockResponse.json();
+        console.log('Stock réapprovisionné:', stockData);
 
         res.json({ success: true, priceData, stockData });
     } catch (error) {
@@ -55,4 +69,3 @@ export default async function handler(req, res) {
         res.status(500).json({ success: false, error: error.message });
     }
 }
-
