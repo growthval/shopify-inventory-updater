@@ -10,6 +10,9 @@ export default async function handler(req, res) {
     console.log('SHOPIFY_STORE:', process.env.SHOPIFY_STORE);
     console.log('SHOPIFY_API_VERSION:', process.env.SHOPIFY_API_VERSION);
     console.log('SHOPIFY_LOCATION_ID:', process.env.SHOPIFY_LOCATION_ID);
+    console.log('priceIncreasePercentage:', priceIncreasePercentage);
+    console.log('stockReplenishment:', stockReplenishment);
+
 
     const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
     const SHOPIFY_STORE = process.env.SHOPIFY_STORE;
